@@ -23,4 +23,4 @@ function findWord(grid: Array<Array<String>>, word: String): Array<Array<String>
 }
 
 
-var results = findWord([['a','a','q','t'],['x','c','w','e'],['r','l','e','p']], 'ace')
+// var results = findWord([['a','a','q','t'],['x','c','w','e'],['r','l','e','p']], 'ace')
