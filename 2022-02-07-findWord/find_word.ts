@@ -1,5 +1,7 @@
 /* Implement a word search. Given a 2D array of letters and a word to find, 
-   return the 2D array with the found word’s letters replaced with an asterisk (*). 
+   with the word the same length as the number of rows in the 2D array,
+   replace the _first_ occurrence of the nth letter in the word with a '*'
+   in the nth row of the 2D array.
 
 Example: 
 
