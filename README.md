@@ -1,2 +1,3 @@
 # cassidoos
-Weekly coding challenge from @cassido
+
+Weekly coding challenge from @cassidoo
