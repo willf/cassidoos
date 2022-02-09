@@ -3,12 +3,11 @@ import { Stack } from '../src';
 import { describe, it } from 'mocha';
 
 describe('Stack', () => {
-    it('can be initialized without an initializer', () => {
-      const s = new Stack<number>();
+    it('false is false', () => {
       expect(false).to.be.false;
     });
   
-    it('can be initialized without an initializer', () => {
+    it('true is false', () => {
       const s = new Stack<number>();
       expect(true).to.be.false;
     });
