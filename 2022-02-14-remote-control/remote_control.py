@@ -23,6 +23,12 @@ def ngrams(letters: List[str], n: int) -> List[Tuple]:
     return zip(*sequences)
 
 
+def sort_path(path: List[str]) -> List[str]:
+    d = {"up": 4, "down": 3, "right": 2, "left": 1, "select": 0}
+    p = sorted(path, key=lambda x: d.get(x, 1), reverse=True)
+    return p
+
+
 def setup_graph() -> nx.Graph:
     """
     This week’s question:
@@ -40,16 +46,12 @@ def setup_graph() -> nx.Graph:
         for letter in row:
             g.add_node(letter)
     for row in letters:
-        g.add_edges_from(ngrams(row, 2), direction="right", weight=1)
-        g.add_edges_from(
-            [(b, a) for a, b in ngrams(row, 2)], direction="left", weight=1
-        )
+        g.add_edges_from(ngrams(row, 2), direction="right")
+        g.add_edges_from([(b, a) for a, b in ngrams(row, 2)], direction="left")
 
     for row in transposed_letters:
-        g.add_edges_from(ngrams(row, 2), direction="down", weight=0.5)
-        g.add_edges_from(
-            [(b, a) for a, b in ngrams(row, 2)], direction="up", weight=0.5
-        )
+        g.add_edges_from(ngrams(row, 2), direction="down")
+        g.add_edges_from([(b, a) for a, b in ngrams(row, 2)], direction="up")
     return g
 
 
@@ -64,7 +66,9 @@ def path_to_edge_labels(path: List[str], g: nx.Graph) -> List[str]:
     >>> path_equivalent(path, path_to_edge_labels(nx.shortest_path(g, 'q', 'c', weight="weight"),g))
     True
     """
-    return [g.edges[a, b]["direction"] for a, b in ngrams(path, 2)]
+    labels = [g.edges[a, b]["direction"] for a, b in ngrams(path, 2)]
+    sorted_labels = sort_path(labels)
+    return sorted_labels
 
 
 def path_to_direction_string(path: List[str], g: nx.Graph) -> str:
@@ -74,7 +78,7 @@ def path_to_direction_string(path: List[str], g: nx.Graph) -> str:
     >>> path_to_direction_string(path, g)
     'down, down, right, right, select'
     """
-    return ", ".join(path_to_edge_labels(path, g)) + ", select"
+    return ", ".join(path) + ", select"
 
 
 def remote_control(word: str, starting_from: str = "q") -> str:
@@ -100,8 +104,9 @@ def remote_control(word: str, starting_from: str = "q") -> str:
     g = setup_graph()
     directions = []
     for a, b in ngrams(starting_from + word, 2):
-        path = nx.shortest_path(g, a, b, weight="weight")
-        directions.append(path_to_direction_string(path, g))
+        path = nx.shortest_path(g, a, b)
+        labels = path_to_edge_labels(path, g)
+        directions.append(path_to_direction_string(labels, g))
     return ", ".join(directions)
 
 
