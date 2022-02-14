@@ -1,0 +1,18 @@
+{
+  "script": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "jest": "^27.5.1",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "@testdeck/mocha": "^0.2.0",
+    "chai": "^4.3.6",
+    "mocha": "^9.2.0",
+    "nyc": "^15.1.0",
+    "ts-mockito": "^2.6.1",
+    "ts-node": "^10.5.0"
+  }
+}
