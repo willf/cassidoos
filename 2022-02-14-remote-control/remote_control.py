@@ -61,7 +61,7 @@ def path_to_edge_labels(path: List[str], g: nx.Graph) -> List[str]:
     """
     >>> g = setup_graph()
     >>> path = ['down', 'down', 'right', 'right']
-    >>> path_equivalent(path, path_to_edge_labels(nx.dijkstra_path(g, 'q', 'c', weight="weight"),g))
+    >>> path_equivalent(path, path_to_edge_labels(nx.shortest_path(g, 'q', 'c', weight="weight"),g))
     True
     """
     return [g.edges[a, b]["direction"] for a, b in ngrams(path, 2)]
@@ -100,7 +100,7 @@ def remote_control(word: str, starting_from: str = "q") -> str:
     g = setup_graph()
     directions = []
     for a, b in ngrams(starting_from + word, 2):
-        path = nx.dijkstra_path(g, a, b, weight="weight")
+        path = nx.shortest_path(g, a, b, weight="weight")
         directions.append(path_to_direction_string(path, g))
     return ", ".join(directions)
 
