@@ -105,3 +105,6 @@ dist
 
 # Map files
 *.map
+
+# VS Code
+.vscode/
