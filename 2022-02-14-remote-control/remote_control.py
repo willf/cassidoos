@@ -74,7 +74,7 @@ def path_to_edge_labels(path: List[str], g: nx.Graph) -> List[str]:
 def path_to_direction_string(path: List[str], g: nx.Graph) -> str:
     """
     >>> g = setup_graph()
-    >>> path = ['q', 'a', 'z', 'x', 'c']
+    >>> path = ['down', 'down', 'right', 'right']
     >>> path_to_direction_string(path, g)
     'down, down, right, right, select'
     """
@@ -103,7 +103,7 @@ def remote_control(word: str, starting_from: str = "q") -> str:
     """
     g = setup_graph()
     directions = []
-    for a, b in ngrams(starting_from + word, 2):
+    for a, b in ngrams(list(starting_from + word), 2):
         path = nx.shortest_path(g, a, b)
         labels = path_to_edge_labels(path, g)
         directions.append(path_to_direction_string(labels, g))
@@ -114,12 +114,12 @@ if __name__ == "__main__":
     import doctest
     import argparse
 
-    args = argparse.ArgumentParser("Print remote control directions")
-    args.add_argument("-w", "--word", help="Word to type")
-    args.add_argument("--letter", help="Starting letter", default="q")
-    args.add_argument("-t", "--test", action="store_true")
-    args.add_argument("-v", "--verbose", action="store_true")
-    args = args.parse_args()
+    parser = argparse.ArgumentParser("Print remote control directions")
+    parser.add_argument("-w", "--word", help="Word to type")
+    parser.add_argument("--letter", help="Starting letter", default="q")
+    parser.add_argument("-t", "--test", action="store_true")
+    parser.add_argument("-v", "--verbose", action="store_true")
+    args = parser.parse_args()
 
     if args.test or args.verbose or (args.word is None):
         doctest.testmod(verbose=args.verbose)
