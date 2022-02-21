@@ -3,27 +3,27 @@ import math
 
 def longest_subseq(arr):
     """ 
-  Given an array of integers, find the length of the longest sub-sequence 
-  such that elements in the sub-sequence are consecutive integers, 
-  the consecutive numbers can be in any order. 
-  >>> longest_subseq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-  10
-  >>> longest_subseq([10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
-  10
-  >>> longest_subseq([])
-  0
-  >>> longest_subseq([1])
-  1
-  >>> longest_subseq([1,3,5,7,9])
-  1
-  >>> longest_subseq([1,3,5,7,9,10])
-  2
-  >>> longest_subseq([1, 9, 87, 3, 10, 4, 20, 2, 45])
-  4
-  >>> longest_subseq([36, 41, 56, 35, 91, 33, 34, 92, 43, 37, 42])
-  5
-  
-  """
+    Given an array of integers, find the length of the longest sub-sequence 
+    such that elements in the sub-sequence are consecutive integers, 
+    the consecutive numbers can be in any order. 
+    >>> longest_subseq([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    10
+    >>> longest_subseq([10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
+    10
+    >>> longest_subseq([])
+    0
+    >>> longest_subseq([1])
+    1
+    >>> longest_subseq([1,3,5,7,9])
+    1
+    >>> longest_subseq([1,3,5,7,9,10])
+    2
+    >>> longest_subseq([1, 9, 87, 3, 10, 4, 20, 2, 45])
+    4
+    >>> longest_subseq([36, 41, 56, 35, 91, 33, 34, 92, 43, 37, 42])
+    5
+    
+    """
     if not arr:
         return 0
     sorted_array = sorted(arr)
@@ -43,28 +43,27 @@ def longest_subseq(arr):
 
 def longest_subseq_rec(arr):
     """ 
-      RECURSIVE VERSION OF longest_subseq
-      Given an array of integers, find the length of the longest sub-sequence 
-      such that elements in the sub-sequence are consecutive integers, 
-      the consecutive numbers can be in any order. 
-      >>> longest_subseq_rec([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
-      10
-      >>> longest_subseq_rec([10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
-      10
-      >>> longest_subseq_rec([])
-      0
-      >>> longest_subseq_rec([1])
-      1
-      >>> longest_subseq_rec([1,3,5,7,9])
-      1
-      >>> longest_subseq_rec([1,3,5,7,9,10])
-      2
-      >>> longest_subseq_rec([1, 9, 87, 3, 10, 4, 20, 2, 45])
-      4
-      >>> longest_subseq_rec([36, 41, 56, 35, 91, 33, 34, 92, 43, 37, 42])
-      5
-      
-      """
+    RECURSIVE VERSION OF longest_subseq
+    Given an array of integers, find the length of the longest sub-sequence 
+    such that elements in the sub-sequence are consecutive integers, 
+    the consecutive numbers can be in any order. 
+    >>> longest_subseq_rec([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+    10
+    >>> longest_subseq_rec([10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
+    10
+    >>> longest_subseq_rec([])
+    0
+    >>> longest_subseq_rec([1])
+    1
+    >>> longest_subseq_rec([1,3,5,7,9])
+    1
+    >>> longest_subseq_rec([1,3,5,7,9,10])
+    2
+    >>> longest_subseq_rec([1, 9, 87, 3, 10, 4, 20, 2, 45])
+    4
+    >>> longest_subseq_rec([36, 41, 56, 35, 91, 33, 34, 92, 43, 37, 42])
+    5    
+    """
 
     def rec(arr, last, current_length, max_length):
         if not arr:
