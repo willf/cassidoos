@@ -6,5 +6,5 @@ Weekly coding challenge from @cassidoo
 
 1. 2020/02/07: Find a word exercise (Typescript)
 2. 2020/02/14: Remote control exercise (Python)
-3. 2020/02/21: Longest subsequence excercise (Python). Too lazy to do it in Typescript,
+3. 2020/02/21: Longest subsequence exercise (Python). Too lazy to do it in Typescript,
    which was the point of this repo :joy:
