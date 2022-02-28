@@ -8,3 +8,4 @@ Weekly coding challenge from @cassidoo
 2. 2020/02/14: Remote control exercise (Python)
 3. 2020/02/21: Longest subsequence exercise (Python). Too lazy to do it in Typescript,
    which was the point of this repo :joy:
+4. 2020/02/28: Largest rectangle exercise (Python)
