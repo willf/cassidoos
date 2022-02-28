@@ -47,12 +47,20 @@ def iter_len(iterable):
 
 def points_left(point, array):
     """
-    from a point, return all points to the left of the point (including the point).
+    from a point, return all points to the left the point (including the point).
+    >>> list(points_left((0, 0), np.array([[1, 2, 3], [4, 5, 6]])))
+    [(0, 0), (0, 1), (0, 2)]
     """
-    return (
-        (row(point), c)
-        for c in takewhile(lambda n: n < col(array.shape), iota(col(point)),)
-    )
+    return ((row(point), c) for c in range(col(point), col(array.shape)))
+
+
+def points_down(point, array):
+    """
+    from a point, return all points below the point (including the point).
+    >>> list(points_down((0, 0), np.array([[1, 2, 3], [4, 5, 6]])))
+    [(0, 0), (1, 0)]
+    """
+    return ((r, col(point)) for r in range(row(point), row(array.shape)))
 
 
 def one_points_left(point, array):
@@ -62,16 +70,6 @@ def one_points_left(point, array):
     """
     return takewhile(
         lambda point: value_at(point, array) == 1, points_left(point, array)
-    )
-
-
-def points_down(point, array):
-    """
-    from a point, return all points below the point (including the point).
-    """
-    return (
-        (r, col(point))
-        for r in takewhile(lambda n: n < row(array.shape), iota(row(point)),)
     )
 
 
@@ -90,8 +88,8 @@ def one_retangle_shape(point, array):
     Given a row and column in the array, find the shape of the rectangle of 1s.
     """
     return (
-        iter_len(one_points_left(point, array)),
         iter_len(one_points_down(point, array)),
+        iter_len(one_points_left(point, array)),
     )
 
 
@@ -135,10 +133,10 @@ def largest_rectangle(array):
            [0, 0, 1, 0, 0]])
     >>> largest_rectangle(islands)
     (2, 2)
-    >>> largest_rectangle(np.zeros((10,10)))
+    >>> largest_rectangle(np.zeros((5,10)))
     (0, 0)
-    >>> largest_rectangle(np.ones((10,10)))
-    (10, 10)
+    >>> largest_rectangle(np.ones((5,10)))
+    (5, 10)
     """
     return max(rectangle_shapes(array), key=area_from_shape, default=(0, 0))
 
