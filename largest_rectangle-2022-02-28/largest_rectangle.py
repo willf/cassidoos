@@ -1,16 +1,29 @@
 from itertools import takewhile, product
 import numpy as np
+import string
 
 ## TODO : THIS IS ALL WRONG !!!
 
 
-def trues(iterable):
+# def trues(iterable):
+#     """
+#     Given an iterable, all the truthy values are returned.
+#     >>> list(trues([1, 0, None, '', [], {}, False]))
+#     [1]
+#     """
+#     return filter(None, iterable)
+
+
+def letters_25():
     """
-    Given an iterable, all the truthy values are returned.
-    >>> list(trues([1, 0, None, '', [], {}, False]))
-    [1]
+    >>> letters_25()
+    array([['A', 'B', 'C', 'D', 'E'],
+           ['F', 'G', 'H', 'I', 'J'],
+           ['K', 'L', 'M', 'N', 'O'],
+           ['P', 'Q', 'R', 'S', 'T'],
+           ['U', 'W', 'X', 'Y', 'Z']], dtype='<U1')
     """
-    return filter(None, iterable)
+    return np.array(sorted(set(string.ascii_uppercase).difference("V"))).reshape(5, 5)
 
 
 def row(point):
@@ -22,6 +35,14 @@ def row(point):
     1
     """
     return point[0]
+
+
+def width(array):
+    return array.shape[1]
+
+
+def height(array):
+    return array.shape[0]
 
 
 def col(point):
@@ -44,93 +65,6 @@ def value_at(point, array):
     return array[row(point), col(point)]
 
 
-def is_one_at(point, array):
-    """
-    Given a point and a 2D array, return True if the point is a 1 in the array.
-    """
-    return value_at(point, array) == 1
-
-
-def iter_len(iterable):
-    """
-    Given an iterable, return the length of the iterable.
-    >>> iter_len(range(5))
-    5
-    >>> iter_len(())
-    0
-    """
-    return sum(1 for _ in iterable)
-
-
-def points_right(point, array):
-    """
-    from a point, return all points to the right the point (including the point).
-    >>> list(points_right((0, 0), np.array([[1, 2, 3], [4, 5, 6]])))
-    [(0, 0), (0, 1), (0, 2)]
-    """
-    return ((row(point), c) for c in range(col(point), col(array.shape)))
-
-
-def points_down(point, array):
-    """
-    from a point, return all points below the point (including the point).
-    >>> list(points_down((0, 0), np.array([[1, 2, 3], [4, 5, 6]])))
-    [(0, 0), (1, 0)]
-    """
-    return ((r, col(point)) for r in range(row(point), row(array.shape)))
-
-
-def points_down_right(point, array):
-    """
-    Given a point in the array, return all points to the right and below the point (including the point).
-    >>> list(points_down_right((0, 0), np.zeros((6,10))))
-    [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
-    >>> list(points_down_right((2, 3), np.zeros((6,10))))
-    [(2, 3), (3, 4), (4, 5), (5, 6)]
-    """
-    return zip(
-        [row(p) for p in points_down(point, array)],
-        [col(p) for p in points_right(point, array)],
-    )
-
-
-def one_points(points, array):
-    """
-  Given a list of points and a 2D array, take all points in the list that have value 1 in the array
-  until you hit a zero
-  >>> list(one_points([(0,0), (1,1), (2,2)], np.ones((10,10))))
-  [(0, 0), (1, 1), (2, 2)]
-  >>> list(one_points([(0,0), (1,1), (2,2)], np.zeros((10,10))))
-  []
-  >>> list(one_points([(0,0), (1,1), (2,2)], np.array([[1, 1, 1], [1, 1, 1], [0, 0, 0]])))
-  [(0, 0), (1, 1)]
-  """
-    return takewhile(lambda p: value_at(p, array) == 1, points,)
-
-
-def one_retangle_shape(point, array):
-    """
-    Given a row and column in the array, find the shape of the rectangle of 1s.
-    """
-    return (
-        iter_len(one_points(points_down(point, array), array)),
-        iter_len(one_points(points_right(point, array), array)),
-    )
-
-
-def rectangular_extensions(point, array):
-    """
-    Given a point in the array, get rectangles of 1s that extend from the point.
-    """
-    return trues(
-        (
-            one_right_extension(start_point, current_end, array)
-            # + right_extension(start_point, current_end, array)
-            # + square_extension(start_point, current_end, array)
-        )
-    )
-
-
 def area_from_shape(shape):
     """
     Given a shape, return the area of the shape.
@@ -138,6 +72,15 @@ def area_from_shape(shape):
     6
     """
     return row(shape) * col(shape)
+
+
+def area(array):
+    """
+    Given a 2D array, return the area of the array.
+    >>> area(np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]))
+    9
+    """
+    return area_from_shape(array.shape)
 
 
 def points(array):
@@ -149,11 +92,156 @@ def points(array):
     return product(range(array.shape[0]), range(array.shape[1]))
 
 
-def rectangle_shapes(array):
+def can_extend_right(base, p, slice):
     """
-    Given a 2D array of 0s and 1s, return the shapes of all rectangles of 1s in the array.
+    Given a slice of an array starting at point p, return whether the slice can be extended to the right.
+    >>> arr = letters_25()
+    >>> point = (2,4)
+    >>> value_at(point, arr)
+    'O'
+    >>> can_extend_right(arr, point, arr[2:4, 4:5])
+    False
+    >>> can_extend_right(arr, (2,3), arr[2:4, 3:4])
+    True
     """
-    return (one_retangle_shape(point, array) for point in points(array))
+    return col(p) + width(slice) < width(base)
+
+
+def can_extend_down(base, p, slice):
+    """
+    Given a slice of an array starting at point p, return whether the slice can be extended downwards.
+    >>> arr = letters_25()
+    >>> point = (2,4)
+    >>> value_at(point, arr)
+    'O'
+    >>> can_extend_down(arr, point, arr[2:5, 4:5])
+    False
+    >>> can_extend_down(arr, point, arr[2:4, 4:5])
+    True
+    """
+    return row(p) + height(slice) < height(base)
+
+
+def extend_right(base, p, slice):
+    """
+    Given a slice of an array starting at point p, return the slice extended to the right.
+    >>> arr = letters_25()
+    >>> point = (2,4)
+    >>> value_at(point, arr)
+    'O'
+    >>> extend_right(arr, point, arr[2:4, 4:5])
+    >>> extend_right(arr, (2,3), arr[2:4, 3:4])
+    array([['N', 'O'],
+           ['S', 'T']], dtype='<U1')
+    """
+    if not can_extend_right(base, p, slice):
+        return None
+    return base[row(p) : row(p) + height(slice), col(p) : col(p) + width(slice) + 1]
+
+
+def extend_down(base, p, slice):
+    """
+    Given a slice of an array starting at point p, return the slice extended downwards.
+    >>> arr = letters_25()
+    >>> point = (2,4)
+    >>> value_at(point, arr)
+    'O'
+    >>> extend_down(arr, point, arr[2:5, 4:5])
+    >>> extend_down(arr, point, arr[2:4, 4:5])
+    array([['O'],
+           ['T'],
+           ['Z']], dtype='<U1')
+    """
+    if not can_extend_down(base, p, slice):
+        return None
+    return base[row(p) : row(p) + height(slice) + 1, col(p) : col(p) + width(slice)]
+
+
+def extend_diagonally(base, p, slice):
+    """
+    Given a slice of an array starting at point p, return the slice extended diagonally.
+    >>> arr = letters_25()
+    >>> point = (2,4)
+    >>> value_at(point, arr)
+    'O'
+    >>> extend_diagonally(arr, point, arr[2:5, 4:5])
+    >>> extend_diagonally(arr, (2,2), arr[2:4, 2:4])
+    array([['M', 'N', 'O'],
+           ['R', 'S', 'T'],
+           ['X', 'Y', 'Z']], dtype='<U1')
+    """
+    if not (can_extend_down(base, p, slice) and can_extend_right(base, p, slice)):
+        return None
+    return base[row(p) : row(p) + height(slice) + 1, col(p) : col(p) + width(slice) + 1]
+
+
+def point_to_slice(base, p):
+    """
+    Given a point in the array, return the slice of the array that extends from the point.
+    >>> arr = letters_25()
+    >>> point = (2,3)
+    >>> value_at(point, arr)
+    'N'
+    >>> point_to_slice(arr, point)
+    array([['N']], dtype='<U1')
+    """
+    return base[row(p) : row(p) + 1, col(p) : col(p) + 1]
+
+
+def all_ones(slice):
+    """
+    Given a slice of an array, return whether the slice is all ones.
+    >>> arr = np.ones((3,3))
+    >>> all_ones(arr[:,:])
+    True
+    >>> arr = np.zeros((3,3))
+    >>> all_ones(arr[:,:])
+    False
+    """
+    return slice.all()
+
+
+def array_to_point_slices(base):
+    """
+    generate a list of (point, point slice) for every point in the base array.
+    """
+    return ((p, point_to_slice(base, p)) for p in points(base))
+
+
+def rectangles_of_one(base):
+    """
+    Given a base array, generate list of all (point, rectangle) where the rectangle is all ones.
+
+    """
+    stack = []
+    for p, slice in array_to_point_slices(base):
+        stack.append((p, slice))
+    while stack:
+        p, slice = stack.pop()
+        if all_ones(slice):
+            yield p, slice
+        if can_extend_right(base, p, slice):
+            stack.append((p, extend_right(base, p, slice)))
+        if can_extend_down(base, p, slice):
+            stack.append((p, extend_down(base, p, slice)))
+        if can_extend_right(base, p, slice) and can_extend_down(base, p, slice):
+            stack.append((p, extend_diagonally(base, p, slice)))
+
+
+def max_point_and_rectangle_of_one(base):
+    """
+    Given a base array, return the largest rectangle of one and its point.
+    >>> max_point_and_rectangle_of_one(np.ones((3,3)))[1].shape
+    (3, 3)
+    >>> max_point_and_rectangle_of_one(np.zeros((3,3)))[1].shape
+    (0, 0)
+    
+    """
+    return max(
+        rectangles_of_one(base),
+        key=lambda pair: area(pair[1]),
+        default=(None, np.ones((0, 0))),
+    )
 
 
 def largest_rectangle(array):
@@ -191,12 +279,12 @@ def largest_rectangle(array):
            [0, 0, 1],
            [1, 0, 0],
            [1, 0, 1]])
-    >>> largest_rectangle(a24.reshape(8, 3))
-    (1, 3)
-    >>> largest_rectangle(a24.reshape(4, 6))
-    (1, 2)
-    >>> largest_rectangle(a24.reshape(6, 4))
-    (2, 2)
+    >>> area_from_shape(largest_rectangle(a24.reshape(8, 3)))
+    4
+    >>> area_from_shape(largest_rectangle(a24.reshape(4, 6)))
+    3
+    >>> area_from_shape(largest_rectangle(a24.reshape(6, 4)))
+    4
     >>> a60 = np.array([[1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1]])
     >>> a60.reshape(6, 10)
     array([[1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
@@ -205,51 +293,12 @@ def largest_rectangle(array):
            [1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
            [0, 1, 1, 1, 0, 0, 0, 0, 1, 0],
            [1, 1, 1, 0, 0, 1, 0, 1, 0, 1]])
-    >>> largest_rectangle(a60.reshape(6, 10))
-    (2, 3)
+    >>> area_from_shape(largest_rectangle(a60.reshape(6, 10)))
+    6
     >>> area_from_shape(largest_rectangle(a60.reshape(10, 6)))
-    3
+    4
     """
-    return max(rectangle_shapes(array), key=area_from_shape, default=(0, 0))
-
-
-def extensions(point, array):
-    """
-    Given a point in the array, get rectangles of 1s that extend from the point.
-    """
-    keepers = []
-    r, c = point
-    slice = array[r : c + 1, r : c + 1]
-    print("slice", slice)
-    stack = [slice]
-    print("stack is", stack)
-    if stack:
-        print("there is a stack")
-    else:
-        print("there is no stack")
-    while stack:
-        current_slice = stack.pop()
-        print(current_slice)
-        if current_slice.all():
-            keepers.append(current_slice)
-            (row_, col_) = current_slice.shape
-            print("row_, col_", row_, col_)
-            if c + col_ + 1 < array.shape[1]:
-                stack.append(array[r + row_ : c + col_, r + row_ : c + col_ + 1])
-            # if row(point) + 2 < row_:
-            #     stack.append(
-            #         array[
-            #             row(point) + 1 : col(point) + 2, row(point) + 1 : col(point) + 1
-            #         ]
-            #     )
-            # if col(point) + 2 < col_ and row(point) + 2 < row_:
-            #     stack.append(
-            #         array[
-            #             row(point) + 1 : col(point) + 2, row(point) + 1 : col(point) + 2
-            #         ]
-            #     )
-    print("no more stack")
-    return keepers
+    return max_point_and_rectangle_of_one(array)[1].shape
 
 
 if __name__ == "__main__":
