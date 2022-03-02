@@ -234,7 +234,7 @@ def max_point_and_rectangle_of_one(base):
     )
 
 
-def largest_rectangle(array):
+def largest_rectangle_(array):
     """
     Given a 2D array of 0s and 1s, return the size of the largest rectangle of 1s in the array.
     Example (javascript version):
@@ -253,11 +253,11 @@ def largest_rectangle(array):
            [1, 1, 0, 0, 1],
            [1, 1, 0, 0, 0],
            [0, 0, 1, 0, 0]])
-    >>> largest_rectangle(islands)
+    >>> largest_rectangle_(islands)
     (2, 2)
-    >>> largest_rectangle(np.zeros((5,10)))
+    >>> largest_rectangle_(np.zeros((5,10)))
     (0, 0)
-    >>> largest_rectangle(np.ones((5,10)))
+    >>> largest_rectangle_(np.ones((5,10)))
     (5, 10)
     >>> a24 = np.array([1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1])
     >>> a24.reshape(8,3)
@@ -269,11 +269,11 @@ def largest_rectangle(array):
            [0, 0, 1],
            [1, 0, 0],
            [1, 0, 1]])
-    >>> area_from_shape(largest_rectangle(a24.reshape(8, 3)))
+    >>> area_from_shape(largest_rectangle_(a24.reshape(8, 3)))
     4
-    >>> area_from_shape(largest_rectangle(a24.reshape(4, 6)))
+    >>> area_from_shape(largest_rectangle_(a24.reshape(4, 6)))
     3
-    >>> area_from_shape(largest_rectangle(a24.reshape(6, 4)))
+    >>> area_from_shape(largest_rectangle_(a24.reshape(6, 4)))
     4
     >>> a60 = np.array([[1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1]])
     >>> a60.reshape(6, 10)
@@ -283,12 +283,23 @@ def largest_rectangle(array):
            [1, 0, 1, 0, 1, 1, 0, 1, 1, 1],
            [0, 1, 1, 1, 0, 0, 0, 0, 1, 0],
            [1, 1, 1, 0, 0, 1, 0, 1, 0, 1]])
-    >>> area_from_shape(largest_rectangle(a60.reshape(6, 10)))
+    >>> area_from_shape(largest_rectangle_(a60.reshape(6, 10)))
     6
-    >>> area_from_shape(largest_rectangle(a60.reshape(10, 6)))
+    >>> area_from_shape(largest_rectangle_(a60.reshape(10, 6)))
     4
     """
     return max_point_and_rectangle_of_one(array)[1].shape
+
+
+def largest_rectangle(array):
+    """
+    The string-based API as defined in the problem statement.
+    >>> islands = np.array([0,0,0,1,0,1,1,0,0,1,1,1,0,0,0,0,0,1,0,0]).reshape(4,5)
+    >>> largest_rectangle(islands)
+    '2x2'
+    """
+    shape = largest_rectangle_(array)
+    return f"{shape[0]}x{shape[1]}"
 
 
 if __name__ == "__main__":
