@@ -2,18 +2,7 @@ from itertools import takewhile, product
 import numpy as np
 import string
 
-## TODO : THIS IS ALL WRONG !!!
-
-
-# def trues(iterable):
-#     """
-#     Given an iterable, all the truthy values are returned.
-#     >>> list(trues([1, 0, None, '', [], {}, False]))
-#     [1]
-#     """
-#     return filter(None, iterable)
-
-
+# used for doc testing
 def letters_25():
     """
     >>> letters_25()
@@ -56,6 +45,7 @@ def col(point):
     return point[1]
 
 
+# used for doc testing
 def value_at(point, array):
     """
     Given a point and a 2D array, return the value at the point.
