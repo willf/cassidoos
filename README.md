@@ -9,3 +9,4 @@ Weekly coding challenge from @cassidoo
 3. 2020/02/21: Longest subsequence exercise (Python). Too lazy to do it in Typescript,
    which was the point of this repo :joy:
 4. 2020/02/28: Largest rectangle exercise (Python)
+5. 2020/03/07: Implement hashmap (Python)
