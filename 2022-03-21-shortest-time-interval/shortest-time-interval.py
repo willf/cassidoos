@@ -11,11 +11,18 @@ def smallestTimeInterval(times):
     Assumes that the times are sorted.
     >>> smallestTimeInterval(['01:00', '08:15', '11:30', '13:45', '14:10', '20:05'])
     '25 minutes'
+    >>> smallestTimeInterval(['01:00'])
+    '0 minutes'
+    >>> smallestTimeInterval(['01:00', '01:00'])
+    '0 minutes'
+    >>> smallestTimeInterval([])
+    '0 minutes'
     """
     intervals = []
     for i in range(len(times) - 1):
         intervals.append(time_to_minutes(times[i + 1]) - time_to_minutes(times[i]))
-    min_interval = min(intervals)
+    min_interval = min(intervals) if intervals else 0
+
     return f'{min_interval} {pluralize("minute", min_interval)}'
 
 
