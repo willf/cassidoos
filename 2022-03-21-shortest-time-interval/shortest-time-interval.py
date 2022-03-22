@@ -20,6 +20,10 @@ def smallestTimeInterval(times):
     >>> smallestTimeInterval([])
     '0 minutes'
     """
+    # It is foolish to try to do this in linear time.
+    # If the list is short, it won't matter.
+    # If the list is longer than 720, then the minimum interval must be 0, by the pigeonhole principle.
+    # 720 isn't long. :)
     minutes = [False for i in range(24 * 60)]  # linear time
     for time in times:
         minutes[time_to_minutes(time)] = True  # linear time
