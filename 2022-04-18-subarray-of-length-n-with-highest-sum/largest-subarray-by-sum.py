@@ -15,7 +15,7 @@
 #  zip(*[arr[i:] for i in range(n)])
 # 
 
-from itertools import islice, tee
+from itertools import islice
 
 def ngrams(arr, n):
     '''
@@ -91,17 +91,11 @@ def largest_subarray_sum(arr, n):
     new_sum = sum(arr[0:n])
     max = new_sum
     max_i = 0
-    #print(f'At start: n: {n}, arr: {arr}; {new_sum}; arr[:n]: {arr[:n]}')
-    #print(f' range: {list(range(n, len(arr)-n+1))}')
     for i in range(n, len(arr)-n+1):
-        #print(f'i: {i}, i+n=1: {i+n-1} arr[i:i+n-1]: {arr[i:i+n-1]}')
-        #print(f"Dropping arr[i-n]: {arr[i-n]} ; Adding arr[i+n-1] {arr[i+n-1]}:")
         new_sum = new_sum - arr[i-n] + arr[i+n-1]
-        #print(f'new_sum: {new_sum}')
         if new_sum > max:
             max = new_sum
             max_i = i
-            #print(f'max: {max}; max_i: {max_i}, max_i+n: {max_i+n}; new_sum: {new_sum}; arr[max_i:max_i+n]: {arr[max_i:max_i+n]}')
     return arr[max_i:max_i+n]
 
 if __name__ == '__main__':
