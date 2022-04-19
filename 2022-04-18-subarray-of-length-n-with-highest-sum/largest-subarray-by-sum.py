@@ -15,7 +15,6 @@
 #  zip(*[arr[i:] for i in range(n)])
 # 
 
-from hashlib import new
 from itertools import islice, tee
 
 def ngrams(arr, n):
