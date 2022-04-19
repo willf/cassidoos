@@ -126,4 +126,3 @@ if __name__ == '__main__':
             runner.bench_func(f'max_ngrams_ngrams; length: {l}, ngram_size: {n} ', lambda:max_ngrams(arr, n))
             runner.bench_func(f'max_largest_subarray_sum; length: {l}, ngram_size: {n} ', lambda: max_largest_subarray_sum(arr, n))
 
-    
