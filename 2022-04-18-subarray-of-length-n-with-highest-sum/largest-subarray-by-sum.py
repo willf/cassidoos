@@ -4,6 +4,36 @@
 #
 #$ largestSubarraySum([3,1,4,1,5,9,2,6], 3)
 #$ [9, 2, 6]
+#
+
+# Things I learned:
+# 1. How the zip(*arr) works.
+# 2. But that zip(*arr) is slower than yielding ngrams directly. about 2x as slow
+# 3. the ngrams function is also a lot clearer than the zip(*arr) version.
+
+
+def ngrams(arr, n):
+    '''
+    Yields all of the n-grams of an array.
+
+    >>> list(ngrams([1,2,3], 2))
+    [[1, 2], [2, 3]]
+    >>> list(ngrams([1,2,3], 3))
+    [[1, 2, 3]]
+    >>> list(ngrams([1,2,3], 4))
+    []
+    >>> list(ngrams([1,2,3], 0))
+    []
+    >>> list(ngrams([], 2))
+    []
+    '''
+    for i in range(len(arr) - n + 1):
+        a = arr[i:i+n]
+        if a: # python yields empty arrays ...
+            yield a
+        else:
+            break
+    
 
 def largestSubarraySum(arr, n):
     """
@@ -25,10 +55,9 @@ def largestSubarraySum(arr, n):
     ...
     ValueError: max() arg is an empty sequence
     """
-    subarrays = zip(*[arr[i:] for i in range(n)])
+    subarrays = ngrams(arr, n)
     return list(max(subarrays, key=sum))
 
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-    
