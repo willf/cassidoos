@@ -36,6 +36,36 @@ def smallestTimeInterval(times):
     return f'{min_interval} {pluralize("minute", min_interval)}'
 
 
+def smallestTimeIntervalSorted(times):
+    """
+    Given a list of times in a 24-hour period, return the smallest interval between two times in the list.
+    Assumes that the times are in the format 'hh:mm'.
+    Does _not_ assume that the times are in order.
+    >>> smallestTimeIntervalSorted(['01:00', '08:15', '11:30', '13:45', '14:10', '20:05'])
+    '25 minutes'
+    >>> m
+    '25 minutes'
+    >>> smallestTimeIntervalSorted(['01:00'])
+    '0 minutes'
+    >>> smallestTimeIntervalSorted(['01:00', '01:00'])
+    '0 minutes'
+    >>> smallestTimeIntervalSorted([])
+    '0 minutes'
+    """
+    # It is foolish to try to do this in linear time.
+    # If the list is short, it won't matter.
+    # If the list is longer than 720, then the minimum interval must be 0, by the pigeonhole principle.
+    # 720 isn't long. :)
+
+    minutes = sorted([time_to_minutes(time) for time in times])  # O(n)log(n)
+    intervals = []
+    for i in range(len(minutes) - 1):
+        intervals.append(minutes[i + 1] - minutes[i])  # linear time
+    min_interval = min(intervals) if intervals else 0  # linear time
+
+    return f'{min_interval} {pluralize("minute", min_interval)}'
+
+
 def time_to_minutes(time):
     """
     Given a time in the format 'hh:mm', return the number of minutes since midnight.
