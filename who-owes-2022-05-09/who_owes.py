@@ -20,7 +20,7 @@ receipts = [
 ]
 
 $ whoOwes(receipts)
-$ 'Clara owes Cassidy $19, Ximena owes Cassidy $17'
+$ 'Clara owes Cassidy $21, Ximena owes Cassidy $15'
 """
 
 
@@ -29,9 +29,9 @@ def roll_up(receipts):
     From a list of {'name' :, 'paid' :} pairs, create a hash
     table with names for keys, and total paid for
     values.
-
-    >>> roll_up([{'name' : 'A', 'paid' : 10}, {'name' : 'A', 'paid' : 10}, {'name' : 'B', 'paid' : 10}])
-    [{'name': 'A', 'paid': 20}, {'name': 'B', 'paid': 10}]
+    >>> receipts = [{ 'name' : 'Ximena', 'paid' : 45 }, { 'name' : 'Clara', 'paid' : 130 }, { 'name' : 'Ximena', 'paid' : 100 }, { 'name' : 'Cassidy', 'paid' : 140 }, { 'name' : 'Cassidy', 'paid' : 76 }, { 'name' : 'Clara', 'paid' : 29 }, { 'name' : 'Ximena', 'paid' : 20 },]
+    >>> roll_up(receipts)
+    [{'name': 'Ximena', 'paid': 165}, {'name': 'Clara', 'paid': 159}, {'name': 'Cassidy', 'paid': 216}]
     """
     ht = defaultdict(int)
     for receipt in receipts:
@@ -42,58 +42,56 @@ def roll_up(receipts):
 
 def calculate_over_under(rolled_up):
     """
-    >>> calculate_over_under([{'name': 'A', 'paid': 20}, {'name' : 'B', 'paid' : 10}])
-    [{'name': 'A', 'paid': 20, 'over_under': 5.0}, {'name': 'B', 'paid': 10, 'over_under': -5.0}]
+    >>> calculate_over_under([{'name': 'Ximena', 'paid': 165}, {'name': 'Clara', 'paid': 159}, {'name': 'Cassidy', 'paid': 216}])
+    [{'name': 'Ximena', 'paid': 165, 'over_under': 15.0, 'owed': 180.0, 'percent_paid': 0.9166666666666666}, {'name': 'Clara', 'paid': 159, 'over_under': 21.0, 'owed': 180.0, 'percent_paid': 0.8833333333333333}, {'name': 'Cassidy', 'paid': 216, 'over_under': -36.0, 'owed': 180.0, 'percent_paid': 1.2}]
     """
-    average = sum([rup["paid"] for rup in rolled_up]) / len(rolled_up)
+    owed = sum([rup["paid"] for rup in rolled_up]) / len(rolled_up)
     for rup in rolled_up:
-        rup["over_under"] = rup["paid"] - average
+        rup["over_under"] = owed - rup["paid"]
+        rup["owed"] = owed
+        rup["percent_paid"] = rup["paid"] / rup["owed"]
+
     return rolled_up
 
 
-def transfer_some_money(payers, owed):
+def transfer_some_money(ower, owed):
     """
-    >>> transfer_some_money([{'name': 'B', 'paid': 20, 'over_under': -5.0}], [{'name': 'A', 'paid': 10, 'over_under': 5.0}])
-    ('A', 'B')
+    The ower pays the owed the percent of the owed's over_under
+    #>>> transfer_some_money([{'name': 'B', 'paid': 20, 'over_under': -5.0}], [{'name': 'A', 'paid': 10, 'over_under': 5.0}])
+    #('A', 'B')
     """
-    for owed_person in owed:
-        for payer in payers:
-            if (
-                payer["over_under"] < 0
-                and -payer["over_under"] == owed_person["over_under"]
-            ):
-                payer["over_under"] += owed_person["over_under"]
-                owed_person["over_under"] = 0
-                return (owed_person["name"], payer["name"])
-    raise Exception("No one can pay anyone")
+    pct = ower["percent_paid"]
+    amount_to_pay = owed["owed"] * (1 - pct)
+    return (owed["name"], ower["name"], amount_to_pay)
 
 
 def who_pays_(rolled_up):
     """
-    >>> who_pays_([{'name': 'A', 'paid': 20, 'over_under': 5.0}, {'name' : 'B', 'paid' : 10, 'over_under': -5.0}])
-    [('A', 'B')]
+    driver function for who_pays
     """
     rolled_up = sorted(rolled_up, key=lambda x: x["over_under"] < 0)
     transferred = []
-    owed = [x for x in rolled_up if x["over_under"] > 0]
-    while owed:
-        payers = [x for x in rolled_up if x["over_under"] < 0]
-        total_underpaid = sum([x["over_under"] for x in payers])
-        total_overpaid = sum([x["over_under"] for x in owed])
-        assert total_overpaid + total_underpaid == 0
-        transferred.append(transfer_some_money(payers, owed))
-        owed = [x for x in rolled_up if x["over_under"] > 0]
+    oweds = [x for x in rolled_up if x["over_under"] < 0]
+    owers = [x for x in rolled_up if x["over_under"] > 0]
+    for ower in owers:
+        for owed in oweds:
+            transferred.append(transfer_some_money(ower, owed))
     return transferred
 
 
 def who_pays(receipts):
     """
     >>> who_pays([{'name' : 'Ximena', 'paid' : 45}, {'name' : 'Clara', 'paid' : 130}, {'name' : 'Ximena', 'paid' : 100}, {'name' : 'Cassidy', 'paid' : 140}, {'name' : 'Cassidy', 'paid' : 76}, {'name' : 'Clara', 'paid' : 29}, {'name' : 'Ximena', 'paid' : 20}])
-    'Clara owes Cassidy $19, Ximena owes Cassidy $17'
+    'Clara owes Cassidy $21.00, Ximena owes Cassidy $15.00'
     """
     rolled_up = roll_up(receipts)
     rolled_up = calculate_over_under(rolled_up)
-    return ", ".join([f"{payer} owns {payee}" for payer, payee in who_pays_(rolled_up)])
+    return ", ".join(
+        [
+            f"{payer} owes {payee} ${amount:,.2f}"
+            for payee, payer, amount in sorted(who_pays_(rolled_up))
+        ]
+    )
 
 
 if __name__ == "__main__":
