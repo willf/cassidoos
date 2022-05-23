@@ -1,3 +1,4 @@
+from platform import node
 import networkx as nx
 
 
@@ -10,49 +11,41 @@ while working around 3s.
 """
 
 
-# convert an n x m matrix to list of edges
-# At i, j, there is a path from i to i+i if matrix[i+1,j] =! 3 and i+1 < n
-# At i, j, there is a path from i to j+1 if matrix[i,j+1] =! 3 and j+1 < m
-# If matrix[i,j] = 1, then i is the start node
-# If matrix[i,j] = 2, then j is the end node
-def matrix_to_edge_list(matrix):
-    """
-    >>> matrix_to_edge_list([])
-    (None, None, [])
-    >>> matrix_to_edge_list([[1, 0, 0], [0, 0, 2]])
-    ('0,0', '1,2', [('0,0', '1,0', 'right'), ('0,0', '0,1', 'down'), ('0,1', '1,1', 'right'), ('0,1', '0,2', 'down'), ('0,2', '1,2', 'right'), ('1,0', '1,1', 'down'), ('1,1', '1,2', 'down')])
-    """
+def transpose(list_of_lists):
+    return list(map(list, zip(*list_of_lists)))
+
+
+def matrix_to_graph(matrix):
     start_node = None
     end_node = None
     n = len(matrix)
     if n == 0:
         return start_node, end_node, []
     m = len(matrix[0])
-    edges = []
+    G = nx.DiGraph()
     for i in range(n):
         for j in range(m):
             node_name = f"{i},{j}"
             # start node?
+            node_color = matrix[i][j]
+            node_hash = {"name": node_name, "color": node_color, "i": i, "j": j}
+            G.add_node(node_name, **node_hash)
+            node = G.nodes[node_name]
             if matrix[i][j] == 1:
-                start_node = node_name
+                start_node = node
             # end node?
             if matrix[i][j] == 2:
-                end_node = node_name
-            if i + 1 < n and matrix[i + 1][j] != 3:
-                edges.append((node_name, f"{i+1},{j}", "right"))
-                # edges.append((i, i + i))
-            if j + 1 < m and matrix[i][j + 1] != 3:
-                edges.append((node_name, f"{i},{j+1}", "down"))
-                # edges.append((i, j + 1))
-    return (start_node, end_node, edges)
-
-
-def matrix_to_graph(matrix):
-    start_node, end_node, edges = matrix_to_edge_list(matrix)
-    G = nx.DiGraph()
-    for a, b, direction in edges:
-        G.add_edge(a, b, direction=direction)
-    return (start_node, end_node, G)
+                end_node = node
+            matrix[i][j] = node
+    for row in matrix:
+        for first, second in n_grams(row, 2):
+            if first["color"] != 3 and second["color"] != 3:
+                G.add_edge(first["name"], second["name"], direction="right")
+    for column in transpose(matrix):
+        for first, second in n_grams(column, 2):
+            if first["color"] != 3 and second["color"] != 3:
+                G.add_edge(first["name"], second["name"], direction="down")
+    return (start_node["name"], end_node["name"], G)
 
 
 def n_grams(input, n):
@@ -70,9 +63,17 @@ def path_directions(G, path):
 def start_to_end(grid):
     """
     >>> start_to_end([[1, 0, 0], [0, 0, 2]])
-    [['right', 'down', 'down'], ['down', 'right', 'down'], ['down', 'down', 'right']]
+    [['right', 'right', 'down'], ['right', 'down', 'right'], ['down', 'right', 'right']]
     >>> start_to_end([[1, 3, 0], [0, 0, 2]])
-    [['right', 'down', 'down']]
+    [['down', 'right', 'right']]
+    >>> start_to_end([[1],[2]])
+    [['down']]
+    >>> start_to_end([[1,2]])
+    [['right']]
+    >>> start_to_end([[1],[3],[2]])
+    []
+    >>> start_to_end([[1,3,2]])
+    []
     """
     start_node, end_node, G = matrix_to_graph(grid)
     paths = nx.all_simple_paths(G, source=start_node, target=end_node)
