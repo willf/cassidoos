@@ -104,7 +104,7 @@ def start_to_end(grid):
     paths = nx.all_shortest_paths(G, source=start_node, target=end_node)
     try:
         return [path_directions(G, path) for path in paths]
-    except:
+    except nx.exception.NetworkXNoPath:
         return []
 
 
