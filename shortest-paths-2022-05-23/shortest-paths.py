@@ -95,6 +95,8 @@ def start_to_end(grid):
     []
     >>> start_to_end([[1,3,2],[0,0,0]])
     [['down', 'right', 'right', 'up']]
+    >>> start_to_end([[1, 3, 2, 0], [0, 0, 3, 0], [3, 0, 0, 0]])
+    [['down', 'right', 'down', 'right', 'right', 'up', 'up', 'left']]
     """
     start_node, end_node, G = matrix_to_graph(grid)
     paths = nx.all_shortest_paths(G, source=start_node, target=end_node)
