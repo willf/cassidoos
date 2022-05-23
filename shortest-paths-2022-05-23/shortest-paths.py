@@ -58,10 +58,12 @@ def matrix_to_graph(matrix):
         for first, second in n_grams(row, 2):
             if first["color"] != 3 and second["color"] != 3:
                 G.add_edge(first["name"], second["name"], direction="right")
+                G.add_edge(second["name"], first["name"], direction="left")
     for column in transpose(matrix):
         for first, second in n_grams(column, 2):
             if first["color"] != 3 and second["color"] != 3:
                 G.add_edge(first["name"], second["name"], direction="down")
+                G.add_edge(second["name"], first["name"], direction="up")
     return (start_node["name"], end_node["name"], G)
 
 
@@ -91,13 +93,19 @@ def start_to_end(grid):
     []
     >>> start_to_end([[1,3,2]])
     []
+    >>> start_to_end([[1,3,2],[0,0,0]])
+    [['down', 'right', 'right', 'up']]
     """
     start_node, end_node, G = matrix_to_graph(grid)
-    paths = nx.all_simple_paths(G, source=start_node, target=end_node)
-    return [path_directions(G, path) for path in paths]
+    paths = nx.all_shortest_paths(G, source=start_node, target=end_node)
+    try:
+        return [path_directions(G, path) for path in paths]
+    except:
+        return []
 
 
 if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
+    # print(start_to_end([[1, 3, 2]]))
