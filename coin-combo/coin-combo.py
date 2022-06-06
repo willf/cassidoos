@@ -4,11 +4,13 @@ from itertools import combinations
 def power_set(seq):
     """
     Returns all the subsets of this set. This is a generator.
+    from 'largest' to 'smallest'
+    >>> list(power_set([2, 1]))
+    [(2, 1), (2,), (1,), ()]
     """
-    for r in range(len(seq), 0, -1):
+    for r in range(len(seq), -1, -1):
         for combo in combinations(seq, r):
             yield combo
-    yield ()
 
 
 def coin_combo(coins, total):
