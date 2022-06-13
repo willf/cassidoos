@@ -28,8 +28,8 @@ def long_text(str, n):
     'heeellooo wooorld'
     >>> long_text('lol',10)
     'looooooooool'
-    >>> long_text('get well soon, Cassidy!', 5)
-    'geeeeet weeeeell soooooooooon, Caaaaassiiiiidyyyyy!'
+    >>> long_text('Get well soon, Cassidy!', 5)
+    'Geeeeet weeeeell soooooooooon, Caaaaassiiiiidyyyyy!'
     """
     return "".join([c * n if is_vowel(c) else c for c in str])
 
