@@ -36,6 +36,8 @@ def fibs_le_n(n):
     Given a number n, return all the fib numbers up to fib(n)
     >>> fibs_le_n(0)
     []
+    >>> fibs_le_n(1)
+    [0, 1, 1]
     >>> fibs_le_n(34)
     [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
     >>> fibs_le_n(33)
