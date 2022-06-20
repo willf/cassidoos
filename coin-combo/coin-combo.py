@@ -72,6 +72,7 @@ def coin_combo_2(coins, total):
             yield list(
                 chain.from_iterable([[coins[i]] * row[i] for i in range(len(coins))])
             )
+
     return matrix
 
 
@@ -79,3 +80,5 @@ if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
+
+    print(list(coin_combo_2([2, 3, 5, 7], 17)))
