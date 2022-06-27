@@ -7,7 +7,8 @@ Given a string str and a set of words words, find the longest word in words that
 >>> words = {"able", "ale", "apple", "bale", "kangaroo"}
 >>> longest_word(str, words)
 >>> 'apple'
-
+# "able" and "ale" also work, but are shorter than "apple"
+# "bale" has all the right letters, but not in the right order
 """
 
 
