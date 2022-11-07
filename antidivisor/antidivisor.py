@@ -1,5 +1,5 @@
 # Anti-divisor formula
-
+# From https://oeis.org/A066272/a066272a.html and its links
 # Given an integer n, then its anti-divisors can be generated from the numbers 2n-1, 2n and 2n+1.
 #
 # For example 20 creates the numbers 39,40 and 41.
@@ -52,11 +52,13 @@ def odd_anti_divisors(n):
     [3, 13]
     """
     return [d for d in divisors(2*n-1) +  divisors(2*n+1) if d < n]
-# The even anti-divisors come from 2n. Find odd divisors of 2n, say r, then 2n/r is an even anti-divisor of n.
+# The even anti-divisors come from 2n. Find odd divisors of 2n, say r,
+# then 2n/r is an even anti-divisor of n.
 def even_anti_divisors(n):
     """
     Return a list of even anti-divisors of n.
-    The even anti-divisors come from 2n. Find odd divisors of 2n, say r, then 2n/r is an even anti-divisor of n.
+    The even anti-divisors come from 2n. Find odd divisors of 2n, say r,
+    then 2n/r is an even anti-divisor of n.
     >>> even_anti_divisors(20)
     [8]
     """
