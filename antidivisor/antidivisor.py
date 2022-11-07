@@ -7,6 +7,8 @@
 # The only odd divisor of 40 is 5, hence the only even anti-divisor of 20 is 8.
 # The anti-divisors of 20 are therefore 3, 8 and 13.
 
+def a_very_large_prime():
+    return 23456789
 
 def divisors(n):
     """
@@ -23,8 +25,14 @@ def divisors(n):
     [5]
     >>> divisors(6)
     [2, 3, 6]
+    >>> n = a_very_large_prime()
+    >>> divisors(n) == [n]
+    True
+
     """
-    return [i for i in range(2, n+1) if n % i == 0]
+    if n == 1:
+        return []
+    return [i for i in range(2, n+1 // 2) if n % i == 0] + [n]
 
 def odd_divisors(n):
     """ Return a list of odd divisors of n.
