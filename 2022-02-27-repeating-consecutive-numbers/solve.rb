@@ -11,11 +11,9 @@ end
 def repeated_groups_rec(numbers, current_group, repeated_groups)
   return ([current_group] + repeated_groups).reverse if numbers.empty?
   first_number = numbers[0]
-  last_number = current_group[0]
-  rest_of_numbers = numbers[1..-1]
-  if last_number.nil?
-    repeated_groups_rec(rest_of_numbers, [first_number], repeated_groups)
-  elsif first_number == last_number
+  last_number = current_group[0] # might be nil
+  rest_of_numbers = numbers[1..-1] # might be empty
+  if first_number == last_number
     repeated_groups_rec(rest_of_numbers, [first_number] + current_group, repeated_groups)
   else
     repeated_groups_rec(rest_of_numbers, [first_number], [current_group] + repeated_groups)
