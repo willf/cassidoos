@@ -31,4 +31,6 @@ def nearest_perfect_months(year):
     return {"year": year, "prior": str(prior)+ "-02", "post": str(post)+"-02"}
 
 print(nearest_perfect_months(2025))
+# {'year': 2025, 'prior': '2015-02', 'post': '2026-02'}
 print(nearest_perfect_months(2026))
+# {'year': 2026, 'prior': '2026-02', 'post': '2032-02'}
