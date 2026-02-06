@@ -13,14 +13,22 @@ def zellers_congruence(day, month, year):
     days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     return days[h]
 
-import itertools
+def nearest_perfect_month_prior(year):
+    if zellers_congruence(1,2,year) == "Sunday":
+        return year
+    else:
+        return nearest_perfect_month_prior(year-1)
 
-def take(n, iterable):
-    "Return first n items of the iterable as a list."
-    return list(itertools.islice(iterable, n))
+def nearest_perfect_month_post(year):
+    if zellers_congruence(1,2,year) == "Sunday":
+        return year
+    else:
+        return nearest_perfect_month_post(year+1)
 
-# An infinite stream of integers: 0, 1, 2, 3...
-integers = itertools.count(start=1900)
-perfect_years = ("February 1, " + str(year) for year in integers if zellers_congruence(1,2,year) == "Sunday")
-for perfect_year in take(28, perfect_years):
-    print(perfect_year)
+def nearest_perfect_months(year):
+    prior = nearest_perfect_month_prior(year)
+    post = nearest_perfect_month_post(year+1)
+    return {"year": year, "prior": str(prior)+ "-02", "post": str(post)+"-02"}
+
+print(nearest_perfect_months(2025))
+print(nearest_perfect_months(2026))
